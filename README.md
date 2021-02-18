@@ -33,7 +33,7 @@ This repo will show how to create and send Testnet BTCTEST and ETH coins to desi
 
 ![coins](./Screenshots/coins.png "coins")
 
-- Finally, we will define a function to convert the private key string for each wallet into a Python object so we call call it when we create and send transactions.
+- Finally, we will define a function to convert the private key string for each wallet into a Python object so we can call it when we create and send transactions.
 
 ![privatekeyobject](./Screenshots/privatekeyobject.png "privatekeyobject")
 
@@ -53,14 +53,62 @@ This repo will show how to create and send Testnet BTCTEST and ETH coins to desi
 
 - Next, we will check to ensure the transaction is on the Testnet blockchain network and ensure the transaction has been confirmed. This will tell us if we now have some BTCTEST coins. You can visit the following site and check either using the transaction hash (see above TX hash/Message from BTCTEST Testnet faucet confirmation) or entering your wallet address [Blockcypher](https://live.blockcypher.com/). Then you can check your wallet balances using Python code.
 
-|![Wallet](./Screenshots/Blockcypherwallet.png "Wallet") | ![TX Hash](./Screenshots/BlockcypherTXHash.png "TX Hash")|
-|:---:|:---:|
-| Wallet | TX Hash |
-
-![Python Wallet Balance](./Screenshots/PythonWalletBalance.png "Python Wallet Balance")
+|![Wallet](./Screenshots/BlockcypherWallet.png "Wallet") | ![TX Hash](./Screenshots/BlockcypherTXHash.png "TX Hash")| ![Python Wallet Balance](./Screenshots/PythonWalletBalance.png "Python Wallet Balance")|
+|:---:|:---:|:---:|
+| Wallet | TX Hash | Python code |
 
 - Finally, we can create and send BTCTEST transaction between our newly created wallet addresses. Again, you can use BlockCypher to check the transaction status and wallet balances to ensure your transaction was processed and confirmed.
 
 |![Python Code](./Screenshots/createandsendBTCTEST.png "Python Code") | ![BlockCypher](./Screenshots/BlockcypherReceiveWallet.png "BlockCypher")|
 |:---:|:---:|
 | Python Code | BlockCypher |
+
+## ETH sample code and transactions
+
+***NOTE:**  Due to a bug in web3.py, you will need to send a transaction or two with MyCrypto first, since the w3.eth.generateGasPrice() function does not work with an empty chain. For this example, I will use the node 1 keystore file of my local ETH POA blockchain network. Refer to this repo for creating a local ETH POA blockchain.[ETH custom POA](https://github.com/camdorazio/Proof-of-Authority-Dev-Chain)*
+
+1. Make a modification to .json file of my local ETH POA blockchain by adding in one of the ETH addresses to the pre-allocated accounts in my "networkname".json file.
+
+![Modify json](./Screenshots/adding_in_eth_address_to_ethtest.png "Modify json")
+
+2. Delete the geth folder in each node, then re-initialize using geth --datadir node"X" init "networkname".json. This will create a new chain, and will pre-fund the new account.
+
+|![Node 1](./Screenshots/Node1_command.png "Node 1") | ![Node 2](./Screenshots/Node2_command.png "Node 2")|
+|:---:|:---:|
+| Node 1 | Node 2|
+
+3. Once you initialize the node you can enter your command to start mining some ETH.
+
+Run the nodes in separate terminal windows with the commands:
+
+- ./geth --datadir node1 --unlock "SEALER_ONE_ADDRESS" --mine --rpc --allow-insecure-unlock
+- ./geth --datadir node2 --unlock "SEALER_TWO_ADDRESS" --mine --port 30304 --bootnodes "enode://SEALER_ONE_ENODE_ADDRESS@127.0.0.1:30303" --ipcdisable --allow-insecure-unlock --ipcdisable
+
+*NOTE: Be sure to copy the enode address once you start minnig Node 1 as it will dffer from the original ETH POA blockchain that was previously created.*
+
+|![Node 1 Mining](./Screenshots/Node1_mining.png "Node 1 Mining") | ![Node 2 Mining](./Screenshots/Node2_mining.png "Node 2 Mining")|
+|:---:|:---:|
+| Node 1 Mining| Node 2 Mining|
+
+4. Add the following middleware to web3.py to support the PoA algorithm:
+
+- from web3.middleware import geth_poa_middleware
+- w3.middleware_onion.inject(geth_poa_middleware, layer=0)
+
+![POA Middleware](./Screenshots/POAMiddleware.png "POA Middleware")
+
+5.  Send a transaction from the pre-funded address within the wallet to another, then copy the TXN Hash into MyCrypto's TX Status, and await a successful transaction.
+
+|![MyCrypto Create](./Screenshots/MyCrypto_CreateTransaction.png "MyCrypto Create")| ![MyCrypto Send](./Screenshots/MyCrypto_SendTransaction.png "MyCrypto Send")| ![MyCrypto TXN Hash](./Screenshots/MyCrypto_TXNHash.png "MyCrypto TXN Hash")|
+|:---:|:---:|:---:|
+| MyCrypto Create| MyCrypto Send TXN| MyCrypto TXN Hash|
+
+|![MyCrypto Success 1](./Screenshots/MyCrypto_TNXSuccess1.png "MyCrypto Success 1")| ![MyCrypto Success 2](./Screenshots/MyCrypto_TNXSuccess2.png "MyCrypto Success 2")|
+|:---:|:---:|
+| MyCrypto Success - Top Page| MyCrypto Success - Bottom Page| 
+
+6. Once you have successfully sent a transaction using MyCrypto, we can now code in Python using our previously created functions to create and send ETH test transactions.
+
+![ETH Create and Send](./Screenshots/ETHcreateandsend.png "ETH Create and Send")
+
+**CONGRATULATONS!!! We have now built a powerful wallet and transaction tool that we can use with hundreds of crypto coins!**
