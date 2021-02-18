@@ -1,0 +1,11 @@
+# Dependencies/Requirements
+
+- PHP must be installed on your operating system (any version, 5 or 7). See README.md for installation instructions.
+- The hd-wallet-derive tool. Follow the instructions in this guide to install/clone. See README.md for installation instructions.
+- bit for Python. [bit](https://pypi.org/project/bit/)
+    - Link for bit resource guide. [bit resource guide](https://ofek.dev/bit/)
+- web3.py Python Ethereum library. See README.md for installation instructions.
+- A custom ETH Proof of Authorty blockchain. You can create one by following these instructions. [ETH custom POA](https://github.com/camdorazio/Proof-of-Authority-Dev-Chain)
+- MyCrypto applcation. Follow this link to download the application. [MyCrypto download](https://download.mycrypto.com/)
+- GitBash Follow this link to download the application. [GitBash download](https://git-scm.com/downloads)
+- Jupyter Lab (optional as you can use the same code in Python) [Jupyter install instructions](https://jupyter.org/install)
